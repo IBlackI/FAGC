@@ -2,6 +2,7 @@ const needle = require("needle");
 const fs = require("fs-extra")
 
 const pluginConfig = require("./config");
+const pluginSecrets = require("./secrets");
 const COMPRESS_LUA = false;
 
 module.exports = class remoteCommands {
@@ -41,10 +42,10 @@ module.exports = class remoteCommands {
 	}
 	
 	async report(report){
-		const reportUrl = pluginConfig.fagcApiBaseUrl + 'offence/report/';
+		const reportUrl = pluginSecrets.fagcApiBaseUrl + 'offence/report/';
 		const options = { json: true,
 						  headers: {
-							Authorization: 'Token ' + pluginConfig.fagcApiKey
+							Authorization: 'Token ' + pluginSecrets.fagcApiKey
 						  }
 						};
 		const mi = this.messageInterface;
@@ -67,11 +68,11 @@ module.exports = class remoteCommands {
 	}
 	
 	async updateRules(){
-		var rulesUrl = pluginConfig.fagcApiBaseUrl + 'rules/';
+		var rulesUrl = pluginSecrets.fagcApiBaseUrl + 'rules/';
 		const mi = this.messageInterface;
 		await mi(`/silent-command remote.call("fagc", "clearRules")`);
 		rulesUrl += "?mode=include";
-		pluginConfig.fagcRules.forEach(id => {
+		pluginSecrets.fagcRules.forEach(id => {
 			rulesUrl += "&id=" + id
 		});
 		console.log(rulesUrl);
